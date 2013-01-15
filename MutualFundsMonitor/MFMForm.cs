@@ -319,6 +319,8 @@ namespace MutualFundsMonitor
                 int end = plainText.IndexOf("%", idx) + 1;
                 string value = plainText.Substring(idx, end - idx);
 
+                bool gbp = value.IndexOf("GBP") != -1;
+
                 idx = value.IndexOf('\n') + 1;
                 end = value.IndexOf((char)194, idx);
                 string date = value.Substring(idx, end - idx);
@@ -329,6 +331,8 @@ namespace MutualFundsMonitor
                 string price = value.Substring(idx, end - idx);
                 price = price.Trim();
                 fundInfo.Price = float.Parse(price);
+                if (gbp)
+                    fundInfo.Price *= 100.0f;
 
                 idx = value.IndexOf('\n', end);
                 idx = value.IndexOf((char)194, idx) + 1;
