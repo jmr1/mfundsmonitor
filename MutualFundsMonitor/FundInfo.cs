@@ -63,7 +63,7 @@ namespace MutualFundsMonitor
             m_transactions.Add(transaction);
         }
 
-        public string get_report()
+        public string get_total_report()
         {
             string report = "";
 
@@ -95,6 +95,19 @@ namespace MutualFundsMonitor
 
             if (m_transactions.Count > 1)
                 report += ")";
+
+            return report;
+        }
+
+        public string get_buy_report()
+        {
+            string report = "";
+
+            foreach (TransactionInfo t in m_transactions)
+            {
+                report += t.Date.ToString();
+                report += " ";
+            }
 
             return report;
         }

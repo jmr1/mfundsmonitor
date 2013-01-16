@@ -75,7 +75,7 @@ namespace MutualFundsMonitor
 
         protected void FundInfoListAddItem(string name, string link)
         {
-            string [] row = { "", "", "" };
+            string [] row = { "", "", "", "" };
 
             ListViewItem item = listViewFunds.Items.Add(name);
             item.SubItems.AddRange(row);
@@ -91,6 +91,11 @@ namespace MutualFundsMonitor
                 {
                     found = true;
                     fund.AddTransaction(units, price, date);
+                    string text = fund.Item.SubItems[4].Text;
+                    if (text != "")
+                        text += ", ";
+                    text += date;
+                    fund.Item.SubItems[4].Text = text;
                     break;
                 }
             }
@@ -340,7 +345,7 @@ namespace MutualFundsMonitor
                 string day_change = value.Substring(idx);
                 day_change = day_change.Trim();
 
-                string total = fundInfo.get_report();
+                string total_report = fundInfo.get_total_report();
 
                 string current_date = fundInfo.Item.SubItems[1].Text;
                 string current_day_change = fundInfo.Item.SubItems[2].Text;
@@ -363,10 +368,10 @@ namespace MutualFundsMonitor
                         return;
                     redraw = true;
                 }
-                if (total != current_total)
+                if (total_report != current_total)
                 {
                     if (!form_closing)
-                        ListViewSubItemSetText(fundInfo.Item.SubItems[3], total);
+                        ListViewSubItemSetText(fundInfo.Item.SubItems[3], total_report);
                     else
                         return;
                     redraw = true;

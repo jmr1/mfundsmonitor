@@ -34,6 +34,7 @@
             this.ColumnHeaderDate = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.ColumnHeaderDayChange = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderTotal = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeaderBuyDate = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.SuspendLayout();
             // 
             // buttonCheck
@@ -55,12 +56,13 @@
             this.ColumnHeaderName,
             this.ColumnHeaderDate,
             this.ColumnHeaderDayChange,
-            this.columnHeaderTotal});
+            this.columnHeaderTotal,
+            this.columnHeaderBuyDate});
             this.listViewFunds.FullRowSelect = true;
             this.listViewFunds.GridLines = true;
             this.listViewFunds.Location = new System.Drawing.Point(13, 43);
             this.listViewFunds.Name = "listViewFunds";
-            this.listViewFunds.Size = new System.Drawing.Size(631, 336);
+            this.listViewFunds.Size = new System.Drawing.Size(805, 336);
             this.listViewFunds.TabIndex = 1;
             this.listViewFunds.UseCompatibleStateImageBehavior = false;
             this.listViewFunds.MouseClick += new System.Windows.Forms.MouseEventHandler(this.listViewFunds_MouseClick);
@@ -84,13 +86,18 @@
             // columnHeaderTotal
             // 
             this.columnHeaderTotal.Text = "Total";
-            this.columnHeaderTotal.Width = -2;
+            this.columnHeaderTotal.Width = 140;
+            // 
+            // columnHeaderBuyDate
+            // 
+            this.columnHeaderBuyDate.Text = "Buy Date";
+            this.columnHeaderBuyDate.Width = -2;
             // 
             // MFMForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(656, 391);
+            this.ClientSize = new System.Drawing.Size(830, 391);
             this.Controls.Add(this.listViewFunds);
             this.Controls.Add(this.buttonCheck);
             this.Name = "MFMForm";
@@ -109,6 +116,7 @@
         private System.Windows.Forms.ColumnHeader ColumnHeaderDate;
         private System.Windows.Forms.ColumnHeader ColumnHeaderDayChange;
         private System.Windows.Forms.ColumnHeader columnHeaderTotal;
+        private System.Windows.Forms.ColumnHeader columnHeaderBuyDate;
     }
 }
 
