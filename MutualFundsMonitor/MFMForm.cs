@@ -251,9 +251,11 @@ namespace MutualFundsMonitor
                     }
 
                     if (!reader.Read())
-                        return false;
+                        break; // no more Fund's
                 }
             }
+
+            FundInfoListAddItem("Portfolio Summary", "");
 
             return true;
         }
@@ -310,11 +312,37 @@ namespace MutualFundsMonitor
         {
             ButtonSetEnable(false);
 
+            float portfolio_money_buy = 0.0f;
+            float portfolio_money_now = 0.0f;
+            float portfolio_day_change = 0.0f;
+            bool portfolio_any_change = false;
+
             WebClient webClient = new WebClient();
             HTMLDocument htmlDoc = new HTMLDocument();
             IHTMLDocument2 doc2 = (IHTMLDocument2)htmlDoc;
             foreach (FundInfo fundInfo in fundInfoList)
             {
+                if (fundInfo.Name == "Portfolio Summary" && portfolio_any_change == true)
+                {
+                    float portfolio_day_change_percent = ((portfolio_money_now - portfolio_day_change) * 100.0f) / portfolio_day_change;
+                    float portfolio_total_percent = ((portfolio_money_now - portfolio_money_buy) * 100.0f) / portfolio_money_buy;
+                    if (!form_closing)
+                    {
+                        ListViewSubItemSetText(fundInfo.Item.SubItems[2], portfolio_day_change_percent.ToString("F2") + "%");
+                        ListViewSubItemSetText(fundInfo.Item.SubItems[3], portfolio_total_percent.ToString("F2") + "%");
+                        ListViewRedrawItems(fundInfo.Item, false);
+                    }
+                    else
+                    {
+                        return;
+                    }
+
+                    break;
+                }
+
+                if (fundInfo.Link.Length == 0)
+                    continue;
+
                 string content = webClient.DownloadString(fundInfo.Link);
                 doc2.write(content);
                 doc2.close();
@@ -379,10 +407,19 @@ namespace MutualFundsMonitor
 
                 if (redraw)
                 {
+                    portfolio_any_change = true;
                     if (!form_closing)
                         ListViewRedrawItems(fundInfo.Item, false);
                     else
                         return;
+                }
+
+                foreach (TransactionInfo tr in fundInfo.Transactions)
+                {
+                    float transaction_money_now = (tr.Units * fundInfo.Price);
+                    portfolio_money_buy += (tr.Units * tr.Price);
+                    portfolio_money_now += transaction_money_now;
+                    portfolio_day_change += transaction_money_now - (transaction_money_now * (float.Parse(day_change.Remove(day_change.Length-1)) / 100.0f));
                 }
             }
 
@@ -426,7 +463,7 @@ namespace MutualFundsMonitor
                 foreach (ListViewItem.ListViewSubItem subitem in item.SubItems)
                     subitem.BackColor = Color.LightGray;
 
-                if (item.SubItems[2].Text[0] == '-')
+                if (item.SubItems[2].Text.Length > 0 && item.SubItems[2].Text[0] == '-')
                 {
                     item.SubItems[2].ForeColor = Color.Red;
                     //item.UseItemStyleForSubItems = false;
