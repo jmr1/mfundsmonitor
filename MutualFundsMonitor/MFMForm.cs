@@ -343,7 +343,30 @@ namespace MutualFundsMonitor
                 if (fundInfo.Link.Length == 0)
                     continue;
 
-                string content = webClient.DownloadString(fundInfo.Link);
+                string content = "";
+
+                DialogResult result = DialogResult.Ignore;
+                do
+                {
+                    try
+                    {
+                        content = webClient.DownloadString(fundInfo.Link);
+                    }
+                    catch (Exception e)
+                    {
+                        result = MessageBox.Show("Link openning error: " + fundInfo.Link + "\n" + e.Message + "\nTry again?", fundInfo.Name, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Error);
+                    }
+                } while (result == DialogResult.Yes);
+
+                if (result == DialogResult.No)
+                    continue;
+
+                if (result == DialogResult.Cancel)
+                {
+                    ButtonSetEnable(true);
+                    return;
+                }
+
                 doc2.write(content);
                 doc2.close();
                 string plainText = doc2.body.outerText;
