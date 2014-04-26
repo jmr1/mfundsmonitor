@@ -5,7 +5,7 @@
         /// <summary>
         /// Required designer variable.
         /// </summary>
-        private System.ComponentModel.IContainer components = null;
+//        private System.ComponentModel.IContainer components = null;
 
         /// <summary>
         /// Clean up any resources being used.
@@ -35,6 +35,7 @@
             this.ColumnHeaderDayChange = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderTotal = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderBuyDate = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.webBrowser1 = new System.Windows.Forms.WebBrowser();
             this.SuspendLayout();
             // 
             // buttonCheck
@@ -93,6 +94,15 @@
             this.columnHeaderBuyDate.Text = "Buy Date";
             this.columnHeaderBuyDate.Width = -2;
             // 
+            // webBrowser1
+            // 
+            this.webBrowser1.Location = new System.Drawing.Point(503, 64);
+            this.webBrowser1.MinimumSize = new System.Drawing.Size(20, 20);
+            this.webBrowser1.Name = "webBrowser1";
+            this.webBrowser1.ScriptErrorsSuppressed = true;
+            this.webBrowser1.Size = new System.Drawing.Size(250, 25);
+            this.webBrowser1.TabIndex = 2;
+            // 
             // MFMForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -100,6 +110,7 @@
             this.ClientSize = new System.Drawing.Size(830, 391);
             this.Controls.Add(this.listViewFunds);
             this.Controls.Add(this.buttonCheck);
+            this.Controls.Add(this.webBrowser1);
             this.Name = "MFMForm";
             this.Text = "Mutual Funds Monitor";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MFMForm_FormClosing);
@@ -117,6 +128,7 @@
         private System.Windows.Forms.ColumnHeader ColumnHeaderDayChange;
         private System.Windows.Forms.ColumnHeader columnHeaderTotal;
         private System.Windows.Forms.ColumnHeader columnHeaderBuyDate;
+        private System.Windows.Forms.WebBrowser webBrowser1;
     }
 }
 

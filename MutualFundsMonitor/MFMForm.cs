@@ -317,9 +317,6 @@ namespace MutualFundsMonitor
             float portfolio_day_change = 0.0f;
             bool portfolio_any_change = false;
 
-            WebClient webClient = new WebClient();
-            HTMLDocument htmlDoc = new HTMLDocument();
-            IHTMLDocument2 doc2 = (IHTMLDocument2)htmlDoc;
             foreach (FundInfo fundInfo in fundInfoList)
             {
                 if (fundInfo.Name == "Portfolio Summary" && portfolio_any_change == true)
@@ -343,14 +340,19 @@ namespace MutualFundsMonitor
                 if (fundInfo.Link.Length == 0)
                     continue;
 
-                string content = "";
+                string plainText = "";
 
                 DialogResult result = DialogResult.Ignore;
                 do
                 {
                     try
                     {
-                        content = webClient.DownloadString(fundInfo.Link);
+                        this.webBrowser1.DocumentCompleted += (s, e) =>
+                        {
+                            plainText = this.webBrowser1.DocumentText;
+                        };
+
+                        this.webBrowser1.Navigate(fundInfo.Link);
                     }
                     catch (Exception e)
                     {
@@ -367,9 +369,7 @@ namespace MutualFundsMonitor
                     return;
                 }
 
-                doc2.write(content);
-                doc2.close();
-                string plainText = doc2.body.outerText;
+                while (plainText == "") ; // wait for webcontent to be loaded
 
                 int idx = plainText.IndexOf("NAV");
                 int end = plainText.IndexOf("%", idx) + 1;
@@ -377,24 +377,24 @@ namespace MutualFundsMonitor
 
                 bool gbp = value.IndexOf("GBP") != -1;
 
-                idx = value.IndexOf('\n') + 1;
-                end = value.IndexOf((char)194, idx);
-                string date = value.Substring(idx, end - idx);
-                date = date.Trim();
+                Regex rDate = new Regex(@"\d{1,2}/\d{1,2}/\d{2,4}");
+                Match mDate = rDate.Match(value);
+                string date = mDate.Value;
 
-                idx = value.IndexOf((char)194, end+1) + 1;
-                end = value.IndexOf('\r', idx);
-                string price = value.Substring(idx, end - idx);
-                price = price.Trim();
+                Regex rGBXValue = new Regex(@"(GBX|GBP)\s(\d*\.?\d*)");
+                Match mGBXValue = rGBXValue.Match(value);
+
+                string price = "";
+                if (mGBXValue.Groups.Count > 0)
+                    price = mGBXValue.Groups[mGBXValue.Groups.Count - 1].Value;
+
+                Regex rDayChange = new Regex(@"(\+|-)?\d*\.?\d*%");
+                Match mDayChange = rDayChange.Match(value);
+                string day_change = mDayChange.Value;
+
                 fundInfo.Price = float.Parse(price);
                 if (gbp)
                     fundInfo.Price *= 100.0f;
-
-                idx = value.IndexOf('\n', end);
-                idx = value.IndexOf((char)194, idx) + 1;
-
-                string day_change = value.Substring(idx);
-                day_change = day_change.Trim();
 
                 string total_report = fundInfo.get_total_report();
 
