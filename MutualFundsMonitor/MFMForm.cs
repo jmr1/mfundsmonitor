@@ -349,7 +349,8 @@ namespace MutualFundsMonitor
                     {
                         this.webBrowser1.DocumentCompleted += (s, e) =>
                         {
-                            plainText = this.webBrowser1.DocumentText;
+                            if(this.webBrowser1.ReadyState == WebBrowserReadyState.Complete)
+                                plainText = this.webBrowser1.DocumentText;
                         };
 
                         this.webBrowser1.Navigate(fundInfo.Link);
@@ -369,7 +370,8 @@ namespace MutualFundsMonitor
                     return;
                 }
 
-                while (plainText == "") ; // wait for webcontent to be loaded
+                while (plainText == "") // wait for webcontent to be loaded
+                    System.Threading.Thread.Sleep(1);
 
                 int idx = plainText.IndexOf("NAV");
                 int end = plainText.IndexOf("%", idx) + 1;
