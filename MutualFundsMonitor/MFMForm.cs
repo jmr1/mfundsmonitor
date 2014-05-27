@@ -374,8 +374,13 @@ namespace MutualFundsMonitor
                     System.Threading.Thread.Sleep(1);
 
                 int idx = plainText.IndexOf("NAV");
-                int end = plainText.IndexOf("%", idx) + 1;
-                string value = plainText.Substring(idx, end - idx);
+                int end = 0;
+                string value = "";
+                if (idx != -1)
+                {
+                    end = plainText.IndexOf("%", idx) + 1;
+                    value = plainText.Substring(idx, end - idx);
+                }
 
                 bool gbp = value.IndexOf("GBP") != -1;
 
@@ -394,7 +399,8 @@ namespace MutualFundsMonitor
                 Match mDayChange = rDayChange.Match(value);
                 string day_change = mDayChange.Value;
 
-                fundInfo.Price = float.Parse(price);
+                if(price.Length > 0)
+                    fundInfo.Price = float.Parse(price);
                 if (gbp)
                     fundInfo.Price *= 100.0f;
 
@@ -444,7 +450,8 @@ namespace MutualFundsMonitor
                     float transaction_money_now = (tr.Units * fundInfo.Price);
                     portfolio_money_buy += (tr.Units * tr.Price);
                     portfolio_money_now += transaction_money_now;
-                    portfolio_day_change += transaction_money_now - (transaction_money_now * (float.Parse(day_change.Remove(day_change.Length-1)) / 100.0f));
+                    if(day_change.Length > 0)
+                        portfolio_day_change += transaction_money_now - (transaction_money_now * (float.Parse(day_change.Remove(day_change.Length-1)) / 100.0f));
                 }
             }
 
